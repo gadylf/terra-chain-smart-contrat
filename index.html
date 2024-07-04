@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TERRA CHAIN NFT</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>TERRA CHAIN NFT</h1>
+        
+        <h2>Créer une propriété NFT</h2>
+        <input type="text" id="propertyAddress" placeholder="Adresse de la propriété">
+        <input type="number" id="landArea" placeholder="Superficie">
+        <input type="text" id="ownerAddress" placeholder="Adresse du propriétaire">
+        <input type="number" id="askingPrice" placeholder="Demander un prix">
+        <button onclick="createPropertyNFT()">Créer une propriété NFT</button>
+
+        <h2>Liste des biens à vendre</h2>
+        <input type="number" id="listPropertyID" placeholder="ID de propriété">
+        <input type="number" id="listAskingPrice" placeholder="Demander un prix">
+        <button onclick="listPropertyForSale()">Liste des biens à vendre</button>
+
+        <h2>Acheter une propriété NFT</h2>
+        <input type="number" id="buyPropertyID" placeholder="ID de propriété">
+        <input type="number" id="buyAmount" placeholder="Montant">
+        <button onclick="buyPropertyNFT()">Acheter une propriété NFT</button>
+
+        <h2>Annuler la vente</h2>
+        <input type="number" id="cancelPropertyID" placeholder="ID de propriété">
+        <button onclick="cancelSale()">Annuler la vente</button>
+
+        <h2>Obtenir les détails de la propriété</h2>
+        <input type="number" id="detailsPropertyID" placeholder="ID de propriété">
+        <button onclick="getPropertyDetails()">Obtenir les détails de la propriété</button>
+        <div id="propertyDetails"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/web3/dist/web3.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
