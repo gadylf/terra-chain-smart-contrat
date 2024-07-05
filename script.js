@@ -4,7 +4,6 @@
 const contractAddress = '0x5E5C8A8d9aD87F0d5A63565Ca1E1E7c16bb5A3Df'; 
 // Remplacez par l'ABI de votre contrat déployé
 const contractABI = [
-    [
         {
             "inputs": [],
             "stateMutability": "nonpayable",
@@ -717,9 +716,7 @@ const contractABI = [
             "stateMutability": "nonpayable",
             "type": "function"
         }
-    ]
-    
-];
+    ];
 
 let web3;
         let realEstateNFTContract;
