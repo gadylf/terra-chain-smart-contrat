@@ -722,64 +722,90 @@ const contractABI = [
 ];
 
 let web3;
-let realEstateNFTContract;
-let accounts;
+        let realEstateNFTContract;
+        let accounts;
 
-window.addEventListener('load', async () => {
-    if (typeof window.ethereum !== 'undefined') {
-        try {
-            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-            console.log('Connected account:', accounts[0]);
-            // Now you can use the accounts[0] to interact with your smart contract
-        } catch (error) {
-            console.error('User rejected the request', error);
+        window.addEventListener('load', async () => {
+            if (typeof window.ethereum !== 'undefined') {
+                try {
+                    await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    web3 = new Web3(window.ethereum);
+                    accounts = await web3.eth.getAccounts();
+                    realEstateNFTContract = new web3.eth.Contract(contractABI, contractAddress);
+                    console.log('Web3 and contract initialized');
+                } catch (error) {
+                    console.error('User rejected the request', error);
+                }
+            } else {
+                console.error('MetaMask is not installed!');
+            }
+        });
+
+        async function createPropertyNFT() {
+            const propertyAddress = document.getElementById('propertyAddress').value;
+            const landArea = document.getElementById('landArea').value;
+            const ownerAddress = document.getElementById('ownerAddress').value;
+            const askingPrice = document.getElementById('askingPrice').value;
+
+            try {
+                await realEstateNFTContract.methods.createPropertyNFT(propertyAddress, landArea, ownerAddress, askingPrice)
+                    .send({ from: accounts[0] });
+                console.log('Property NFT created');
+            } catch (error) {
+                console.error('Error creating property NFT', error);
+            }
         }
-    } else {
-        console.error('MetaMask is not installed!');
-    }
-});
 
-async function createPropertyNFT() {
-    const propertyAddress = document.getElementById('propertyAddress').value;
-    const landArea = document.getElementById('landArea').value;
-    const ownerAddress = document.getElementById('ownerAddress').value;
-    const askingPrice = document.getElementById('askingPrice').value;
+        async function listPropertyForSale() {
+            const propertyID = document.getElementById('listPropertyID').value;
+            const askingPrice = document.getElementById('listAskingPrice').value;
 
-    await realEstateNFTContract.methods.createPropertyNFT(propertyAddress, landArea, ownerAddress, askingPrice)
-        .send({ from: accounts[0] });
-}
+            try {
+                await realEstateNFTContract.methods.listPropertyForSale(propertyID, askingPrice)
+                    .send({ from: accounts[0] });
+                console.log('Property listed for sale');
+            } catch (error) {
+                console.error('Error listing property for sale', error);
+            }
+        }
 
-async function listPropertyForSale() {
-    const propertyID = document.getElementById('listPropertyID').value;
-    const askingPrice = document.getElementById('listAskingPrice').value;
+        async function buyPropertyNFT() {
+            const propertyID = document.getElementById('buyPropertyID').value;
+            const amount = document.getElementById('buyAmount').value;
 
-    await realEstateNFTContract.methods.listPropertyForSale(propertyID, askingPrice)
-        .send({ from: accounts[0] });
-}
+            try {
+                await realEstateNFTContract.methods.buyPropertyNFT(propertyID, amount)
+                    .send({ from: accounts[0], value: amount });
+                console.log('Property NFT purchased');
+            } catch (error) {
+                console.error('Error buying property NFT', error);
+            }
+        }
 
-async function buyPropertyNFT() {
-    const propertyID = document.getElementById('buyPropertyID').value;
-    const amount = document.getElementById('buyAmount').value;
+        async function cancelSale() {
+            const propertyID = document.getElementById('cancelPropertyID').value;
 
-    await realEstateNFTContract.methods.buyPropertyNFT(propertyID, amount)
-        .send({ from: accounts[0], value: amount });
-}
+            try {
+                await realEstateNFTContract.methods.cancelSale(propertyID)
+                    .send({ from: accounts[0] });
+                console.log('Property sale canceled');
+            } catch (error) {
+                console.error('Error canceling property sale', error);
+            }
+        }
 
-async function cancelSale() {
-    const propertyID = document.getElementById('cancelPropertyID').value;
+        async function getPropertyDetails() {
+            const propertyID = document.getElementById('detailsPropertyID').value;
 
-    await realEstateNFTContract.methods.cancelSale(propertyID)
-        .send({ from: accounts[0] });
-}
-
-async function getPropertyDetails() {
-    const propertyID = document.getElementById('detailsPropertyID').value;
-    const details = await realEstateNFTContract.methods.properties(propertyID).call();
-
-    document.getElementById('propertyDetails').innerHTML = `
-        <p>Property Address: ${details.propertyAddress}</p>
-        <p>Land Area: ${details.landArea}</p>
-        <p>Owner Address: ${details.ownerAddress}</p>
-        <p>Asking Price: ${details.askingPrice}</p>
-    `;
-}
+            try {
+                const details = await realEstateNFTContract.methods.properties(propertyID).call();
+                document.getElementById('propertyDetails').innerHTML = `
+                    <p>Property Address: ${details.propertyAddress}</p>
+                    <p>Land Area: ${details.landArea}</p>
+                    <p>Owner Address: ${details.ownerAddress}</p>
+                    <p>Asking Price: ${details.askingPrice}</p>
+                `;
+            } catch (error) {
+                console.error('Error getting property details', error);
+            }
+        }
