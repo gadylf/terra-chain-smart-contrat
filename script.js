@@ -726,17 +726,16 @@ let realEstateNFTContract;
 let accounts;
 
 window.addEventListener('load', async () => {
-    if (window.ethereum) {
-        web3 = new Web3(window.ethereum);
+    if (typeof window.ethereum !== 'undefined') {
         try {
-            await window.ethereum.enable();
-            accounts = await web3.eth.getAccounts();
-            realEstateNFTContract = new web3.eth.Contract(contractABI, contractAddress);
+            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+            console.log('Connected account:', accounts[0]);
+            // Now you can use the accounts[0] to interact with your smart contract
         } catch (error) {
-            console.error("User denied account access");
+            console.error('User rejected the request', error);
         }
     } else {
-        console.log("Non-Ethereum browser detected. You should consider trying MetaMask!");
+        console.error('MetaMask is not installed!');
     }
 });
 
